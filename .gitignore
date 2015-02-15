@@ -17,6 +17,20 @@ DerivedData
 *.ipa
 *.xcuserstate
 
+.svn
+.DS_Store
+*.pyc
+*.class
+*.o
+*.shlib
+*.a
+*.xccheckout
+xcdebugger
+UserInterfaceState.xcuserstate
+User Interface State
+WorkspaceSettings.xcsettings
+xcuserdata
+
 # CocoaPods
 #
 # We recommend against adding the Pods directory to your .gitignore. However
