@@ -39,7 +39,7 @@ class MyDropTableView: NSTableView {
   // MARK: Drag operations
   
   override func performDragOperation(sender: NSDraggingInfo) -> Bool {
-    println("perform called: \(sender)")
+    Swift.print("perform called: \(sender)")
     
     if let cb = onDropCB, path = dirPathFromDraggingData(sender) {
       cb(path)

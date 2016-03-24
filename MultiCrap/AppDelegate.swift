@@ -130,7 +130,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     pictaker.beginPictureTakerSheetForWindow(
       window, withDelegate: self,
-      didEndSelector: "pictureTakerDidEnd:returnCode:contextInfo:",
+      didEndSelector:
+        #selector(AppDelegate.pictureTakerDidEnd(_:returnCode:contextInfo:)),
       contextInfo: nil
     )
   }
@@ -138,18 +139,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   func pictureTakerDidEnd(sender: IKPictureTaker, returnCode rc: Int,
                           contextInfo: UnsafeMutablePointer<Void>)
   {
-    if (rc == NSCancelButton) {
-      println("Cancelled ...")
+    if (rc == NSModalResponseCancel) {
+      print("Cancelled ...")
       isLive = false
       return
     }
     
     let croppedImage = pictaker.outputImage()
-    println("did take pic: \(croppedImage)");
+    print("did take pic: \(croppedImage)");
     
     if isLive {
       let url     = selectedURL!
-      let oldName = url.lastPathComponent!.stringByDeletingPathExtension
+      let oldName = (url.lastPathComponent! as NSString).stringByDeletingPathExtension
       
       let tiffData = croppedImage.TIFFRepresentation!
       let imageRep = NSBitmapImageRep(data: tiffData)!
@@ -162,7 +163,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       let newName = oldName + suffix + ".jpeg"
       
       let newURL = NSURL(string: newName, relativeToURL: cropURL)!
-      println("save image to: \(newURL.path!)")
+      print("save image to: \(newURL.path!)")
       
       jpegData.writeToURL(newURL, atomically: false)
     }
@@ -193,13 +194,10 @@ extension AppDelegate { /* image handling */
   func loadFileList() {
     if let pixURL = self.pixURL {
       let fm    = NSFileManager.defaultManager()
-      var error : NSError?
       
-      let contents = fm.contentsOfDirectoryAtURL(
+      let contents = (try! fm.contentsOfDirectoryAtURL(
         pixURL,  includingPropertiesForKeys: nil,
-        options: NSDirectoryEnumerationOptions(),
-        error:   &error
-      ) as! [ NSURL ]
+        options: NSDirectoryEnumerationOptions())) 
       
       imageFiles = contents
         .filter {
@@ -212,7 +210,7 @@ extension AppDelegate { /* image handling */
             ? $0.lastPathComponent!.hasPrefix(self.filterPrefix!)
             : true
         }
-        .sorted { $0.path! < $1.path! }
+        .sort { $0.path! < $1.path! }
     }
     else {
       imageFiles = []
@@ -250,7 +248,7 @@ extension AppDelegate : NSTableViewDelegate {
   func tableViewSelectionDidChange(aNotification: NSNotification) {
     let url = selectedURL!
     
-    println("selection: \(url)")
+    print("selection: \(url)")
     imageView.setImageWithURL(url)
     window.setTitleWithRepresentedFilename(url.lastPathComponent!)
     
