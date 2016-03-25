@@ -29,4 +29,5 @@ TODO:
 
 [@helje5](http://twitter.com/helje5) | helge@alwaysrightinstitute.com
 
-![](http://www.alwaysrightinstitute.com/ARI.png)
+![](http://www.alwaysrightinstitute.com/images/ARI-symbol-logo.png)
+
