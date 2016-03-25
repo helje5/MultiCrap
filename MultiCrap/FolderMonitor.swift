@@ -19,7 +19,8 @@ class FolderMonitor {
   init(_ pixPath: String, _ cb: ( ) -> Void) {
     self.cb = cb
     
-    fd  = open(pixPath.fileSystemRepresentation(), O_EVTONLY)
+    let url = NSURL(fileURLWithPath: pixPath)
+    fd  = open(url.fileSystemRepresentation, O_EVTONLY)
     
     mq  = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
     
@@ -27,8 +28,6 @@ class FolderMonitor {
                                  DISPATCH_VNODE_WRITE, mq)
     
     dispatch_source_set_event_handler(src!) {
-      [unowned self] in
-      
       dispatch_async(dispatch_get_main_queue()) { // retain cycle?
         cb()
       }
